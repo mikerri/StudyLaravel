@@ -18,8 +18,8 @@ Route::get('/', function() {
 });
 
 // 컨트롤러 메서드를 호출하는 방식의 라우트
-use app\Http\App\Http\Controllers\Controller;
-Route::get('index2', [Controller::class, 'index']);
+use App\Http\Controllers\TaskController;
+Route::get('index2', [TaskController::class, 'index']);
 
 // 라우트 파라미터
 Route::get('users/{id}/friends', function($id) {
