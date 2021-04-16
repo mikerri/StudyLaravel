@@ -48,10 +48,10 @@ Route::get('posts/{id}/{slug}', function($id, $slug){
 // 라우트 그룹
 Route::group([], function() {
     Route::get('hello', function() {
-        return 'Hello';
+        return 'Hello!';
     });
     Route::get('world', function() {
-        return 'World';
+        return 'World!';
     });
 });
 
