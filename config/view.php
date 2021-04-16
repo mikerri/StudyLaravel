@@ -14,6 +14,7 @@ return [
     */
 
     'paths' => [
+        // resources/views 경로 지칭
         resource_path('views'),
     ],
 

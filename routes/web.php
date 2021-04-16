@@ -143,29 +143,73 @@ HTML;
     return $content;
 });
 
-// view() 헬퍼 함수를 사용하여 html.php 문서 로드
+// html.php 페이지 전달
 Route::get('hello/htmldoc', function() {
-    return view('html');
+    // Laravel에서 제공하는 view() 헬퍼 함수를 사용
+    return view('hello.html');
+
+    // View 클래스의 make 함수를 사용하여 View 템플릿 (hello.html) 인스턴스 생성하여 전달
+    return View::make('hello.html'); // ./hello/html.php
 });
 
-// 라우트 별칭
+// 라우트 별칭 => /goodbye를 'greeting'이라고 별칭해주기
 Route::get('goodbye', [
-    'as'=>'greeting', function() {
+    'as'=>'greeting',
+    function() {
         return '인사합니다.';
-    }]
-);
-
-// 다른 라우트로 이동
+    }
+]);
+// route() 도우미 함수를 사용하여 다른 라우트로 이동
 Route::get('/greeting', function() {
+    // route(string $name, array $paramemter=>[])
     return redirect(route('greeting'));
 });
 
-// with 헬퍼 함수를 사용하여 html.php 문서에 인자 전달
+// view()에 의해 만들어진 view 인스턴스에 with() 를 체이닝하여 데이터(name)를 바인딩 해줌
 Route::get('hello/html', function() {
-    return view("html")->with('name','사람');
+    return view("hello.html")->with('name','젤다');
+});
+Route::get('hello/html', function() {
+    // 데이터가 2개 이상일 경우 배열 형태로 넣어주기
+    return view("hello.html")->with(['name'=>'고구마', 'greeting'=>"안녕하세요?"]);
+});
+Route::get('hello/html', function() {
+    // view() 함수 인자로 데이터를 바로 넣어줄 수 있음
+    return view('hello.html', ['name'=>'사과', 'greeting'=>"(안녕하세요)..."]);
 });
 
-Route::get('hello/html', function() {
-    return view("html")->with(['name'=>'사람', 'greeting'=>"안녕하세요?"]);
+/*
+ * blade 문법 핵심 기능
+ * 1. String Interpolation 문자열 보간(string 안에 직접 변수 이름을 집어 넣는 방법)
+ * 2. Control Structure 제어 구조
+ * 3. Template Inheritance
+ * 4. 조각 View 삽입
+ */
+Route::get('hello/blade', function() {
+    // view() 함수 인자로 데이터를 바로 넣어줄 수 있음
+    return view('hello.html2', ['name'=>'배', 'greeting'=>"(안녕하세요)...", 'memo'=>"<script>alert('XSS 공격!')</script>"]);
+});
+// if 문법
+Route::get('if/{num}', function($num) {
+    return view('exif', ['num'=>$num]);
+    //return view('exif')->with('num', $num);
+});
+// for 문법
+Route::get('for', function() {
+    $arr = ['사과','배','수박','딸기'];
+    $arr2 = array();
+    $members = [
+        ['name'=>'홍길동', 'age'=>30, 'address'=>'한양'],
+        ['name'=>'허균', 'age'=>50, 'address'=>'한양']
+    ];
+    return view('exfor', ['arr'=>$arr, 'arr2'=>$arr2, 'members'=>$members]);
+});
+// Template Inheritance
+Route::get('child', function() {
+    $members = [
+        ['name'=>'홍길동', 'age'=>30, 'address'=>'한양'],
+        ['name'=>'허균', 'age'=>50, 'address'=>'한양']
+    ];
+    return view('child', ['members'=>$members]);
 });
 
