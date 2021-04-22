@@ -14,3 +14,10 @@
     <p>{{$num}}는 10보다 작은 수</p>
 @endif
 
+<strong># unless Blade 문법</strong>
+@unless($num > 10)
+    <p>{{$num}}는 10과 같거나 작은 수</p>
+@endunless
+<?php if(!$num>10): ?>
+    <p>{{$num}}는 10과 같거나 작은 수</p>
+<?php endif ?>
