@@ -240,6 +240,43 @@ Route::any(string $uri, closure|array|string $action); // HTTP Method를 구분�
 Route::match(array|string $method, string $uri, closure|array|string $action);
 */
 
+// ** 로그인 처리 **
+Route::get("auth/login", function() {
+    $loginInfos = [
+        'email' => 'test@test.com',
+        'password' => 'password'
+    ];
+
+    // auth() 도우미 함수
+    // attempt(array $credentials = [], bool $remember = false) : Attempt to authenticate a user using the given credentials.
+    if(!auth()->attempt($loginInfos)) {
+        return "로그인 실패";
+    }
+
+    return redirect('auth/loginOk'); //'로그인 성공';
+});
+
+/*Route::get('auth/loginOk', function() {
+    dump(session()->all()); // 세션에 저장된 모든 값을 dump 로 출력해주기
+
+    // check() : Determine if the current user is authenticated.
+    if(!auth()->check()) { // 로그인 확인 후 로그인 상태가 아닌 경우
+        return "Login No";
+    }
+
+    // auth()->user() : Get the currently authenticated user.
+    return "Login Ok : ".auth()->user()->name; // 로그인 상태
+});*/
+Route::get('auth/loginOk', ['middler'=>'auth', function() {
+    dump(session()->all()); // 세션에 저장된 모든 값을 dump 로 출력해주기
+    return "Login Ok : ".auth()->user()->name; // 로그인 상태
+}]);
+
+Route::get('auth/logout', function() {
+    auth()->logout(); // 세션 폐기
+    return "로그아웃 완료";
+});
+
 // # Route를 name() Method 호출해 이름 지정
 Route::get('articles/{id}', [ArticlesController::class, 'show'])->name('articles.show');
 /* <a href='<?=route('articles.show', ['id'=>10])?>">*/
@@ -293,3 +330,16 @@ Route::get('something-you-cant-do', function(Illuminate\Http\Request $request) {
     abort_unless($request->has('magicToken'), 403);
     abort_if($request->user()->isBanned, 403);
 });
+
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
