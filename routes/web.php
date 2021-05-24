@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function() {
-    return view('welcome');
+   // return view('welcome');
 });
 
 // # 컨트롤러 메서드를 호출하는 방식의 라우트
@@ -331,15 +331,18 @@ Route::get('something-you-cant-do', function(Illuminate\Http\Request $request) {
     abort_if($request->user()->isBanned, 403);
 });
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+//Route::get('/', function () {
+//    return Inertia::render('Welcome', [
+//        'canLogin' => Route::has('login'),
+//        'canRegister' => Route::has('register'),
+//        'laravelVersion' => Application::VERSION,
+//        'phpVersion' => PHP_VERSION,
+//    ]);
+//});
+//
+//Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//    return Inertia::render('Dashboard');
+//})->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+
+Route::resource('memos', \App\Http\Controllers\MemosController::class);
